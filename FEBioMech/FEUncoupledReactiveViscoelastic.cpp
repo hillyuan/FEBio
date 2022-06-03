@@ -35,6 +35,7 @@ SOFTWARE.*/
 #include <FECore/FEModel.h>
 #include <FECore/log.h>
 #include <limits>
+#include <algorithm>
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -160,7 +161,7 @@ FEMaterialPoint* FEUncoupledReactiveViscoelasticMaterial::GetBondMaterialPoint(F
 bool FEUncoupledReactiveViscoelasticMaterial::NewGeneration(FEMaterialPoint& mp)
 {
     double d;
-    double eps = max(m_emin, 10*std::numeric_limits<double>::epsilon());
+    double eps = std::max(m_emin, 10*std::numeric_limits<double>::epsilon());
 
     // check if the reforming bond mass fraction is above the minimum threshold wmin
     if (ReformingBondMassFraction(mp) < m_wmin) return false;
@@ -587,7 +588,7 @@ void FEUncoupledReactiveViscoelasticMaterial::CullGenerations(FEMaterialPoint& m
     double J = ep.m_J;
     
     int ng = (int)pt.m_v.size();
-    m_nmax = max(m_nmax, ng);
+    m_nmax = std::max(m_nmax, ng);
     
     // don't cull if we have too few generations
     if (ng < 3) return;
